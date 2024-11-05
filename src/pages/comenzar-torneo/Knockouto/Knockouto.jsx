@@ -3,16 +3,20 @@ import useStoreUsuario from "../../../store/manageUser";
 import EnJuegoKnocKout from "./EnJuegoKnocKout";
 
 export const Knockouto = ({ equipos: Equipos }) => {
-  //  torneo
-  // equipos
-
   const [equipos, setEquipos] = useState(Equipos);
-  const [enjuego, setEnjuego] = useState(undefined);
+  const [enjuego, setEnjuego] = useState(null);
   const [Ganadores, setGanadores] = useState({});
-  const [minutosDeJuego, setMinutosDeJuego] = useState(0.05);
+  const [minutosDeJuego, setMinutosDeJuego] = useState(3);
   const [numeroPartido, setNumeroPartido] = useState(0);
   const [rondas, setRondas] = useState(1);
   const [isRunning, setIsRunning] = useState(false);
+  const [EstadisticasTorneo, setEstadisticasTorneo] = useState(null);
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    if (numeroPartido || numeroPartido <= 0) {
+      setRondas(0);
+    }
+  }, [numeroPartido]);
 
   const handleJugar = (i) => {
     if (Object.keys(equipos).length > i + 1) {
@@ -20,27 +24,53 @@ export const Knockouto = ({ equipos: Equipos }) => {
         equipo1: { ...equipos[i], goles: 0 },
         equipo2: { ...equipos[i + 1], goles: 0 },
       });
+      setActive(true);
+
       return;
     }
-    setEnjuego(null);
+    handleFinRonda();
   };
 
   const otroPartido = () => {
-    setEnjuego(null);
+    setEnjuego({});
     handleJugar(numeroPartido + 2);
   };
-  useEffect(() => {
-    if (enjuego === null) {
-      Object.values(Ganadores);
-      console.log(Ganadores);
-      const f = Object.values(Ganadores.round1).map((equipo) => equipo);
-      setEquipos(f);
-      handleJugar(0);
-      setNumeroPartido(0);
-      setGanadores({});
+  const handleFinRonda = () => {
+    if (!equipos.length > 2 || Object.keys(Ganadores).length <= 0) {
+      console.log("second");
+      return;
     }
-  }, [enjuego]);
+    console.log(Ganadores);
+    const PartidosDeRonda = Object.values(Ganadores.round).map(
+      (equipo) => equipo.ganador
+    );
+    // console.log("first");
+    // console.log(PartidosDeRonda);
+    setEquipos(PartidosDeRonda);
+    setNumeroPartido(0);
+    setEstadisticasTorneo((prev) => ({
+      ...prev,
+      [`Ganadores${
+        EstadisticasTorneo ? Object.keys(EstadisticasTorneo).length + 1 : 1
+      }`]: Ganadores,
+    }));
+    setGanadores({});
+    handleJugar(0);
+    // console.log("first");
+  };
 
+  useEffect(() => {
+    setRondas(rondas + 1);
+  }, [EstadisticasTorneo]);
+
+  useEffect(() => {
+    if (equipos && equipos.length % 2 !== 0) {
+      const numRandom = Math.floor(Math.random() * equipos.length);
+      const f = equipos[numRandom];
+      setEquipos([...equipos, f]);
+    }
+  }, [equipos]);
+  // console.log(EstadisticasTorneo);
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <p>total de equipos {equipos.length}</p>
@@ -51,7 +81,11 @@ export const Knockouto = ({ equipos: Equipos }) => {
           min={0}
           max={90}
           value={minutosDeJuego}
-          onChange={(e) => setMinutosDeJuego(e.target.value)}
+          onChange={(e) =>
+            setMinutosDeJuego(
+              e.target.value <= 0 || !e.target.value ? 0 : e.target.value
+            )
+          }
           className="mr-2 pl-1 text-green-600 focus:ring focus:ring-green-200"
         />
         <label className="text-gray-700">Minutos</label>
@@ -65,7 +99,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
         {equipos.map((item, i) => {
           const d = Object.keys(Ganadores).some((key) => {
             const p = Object.values(Ganadores[key]).some((e) => {
-              return e.nombre == item.nombre;
+              return e.ganador.nombre == item.nombre;
             });
             return p;
           });
@@ -83,7 +117,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
               }
             `}
               >
-                {item.nombre}
+                {item?.nombre}
                 <span className="relative">
                   {i == numeroPartido && isRunning && (
                     <span className="absolute top-[2em] right-[-9em] text-black">
@@ -92,24 +126,83 @@ export const Knockouto = ({ equipos: Equipos }) => {
                   )}
                 </span>
               </p>
-              {enjuego && i == numeroPartido && minutosDeJuego > 0 && (
-                <div className="fixed top-8 right-10 bg-green-600 p-2 rounded-lg shadow-md hover:bg-green-700 cursor-pointer transition duration-200 ease-in-out w-72">
-                  <EnJuegoKnocKout
-                    enjuego={enjuego}
-                    numeroPartido={numeroPartido}
-                    minutosDeJuego={minutosDeJuego}
-                    setGanadores={setGanadores}
-                    setNumeroPartido={setNumeroPartido}
-                    otroPartido={otroPartido}
-                    rondas={rondas}
-                    isRunning={isRunning}
-                    setIsRunning={setIsRunning}
-                  />
-                </div>
-              )}
+              {active &&
+                enjuego &&
+                i == numeroPartido &&
+                minutosDeJuego > 0 && (
+                  <div
+                    style={{ zIndex: "3300px" }}
+                    className="fixed top-8 right-10 bg-green-600 p-2 rounded-lg shadow-md hover:bg-green-700 cursor-pointer transition duration-200 ease-in-out w-72"
+                  >
+                    <EnJuegoKnocKout
+                      enjuego={enjuego}
+                      numeroPartido={numeroPartido}
+                      minutosDeJuego={minutosDeJuego}
+                      setGanadores={setGanadores}
+                      setNumeroPartido={setNumeroPartido}
+                      otroPartido={otroPartido}
+                      isRunning={isRunning}
+                      setIsRunning={setIsRunning}
+                    />
+                  </div>
+                )}
             </div>
           );
         })}
+        {EstadisticasTorneo &&
+          Object.entries(EstadisticasTorneo).map(([ronda, ganadores], i) => (
+            <div key={i} className="mb-6">
+              <h2 className="text-xl font-semibold text-blue-600 mb-2">
+                Ronda {ronda}
+              </h2>
+              <table className="min-w-full border border-gray-300">
+                <thead className="bg-blue-100">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Nombre Ganadores
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Goles
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Nombre Perdedores
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      Goles
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">
+                      penaltis
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.values(ganadores.round).map((partido, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-gray-200 hover:bg-gray-100"
+                    >
+                      <td className="border border-gray-300 px-4 py-2">
+                        {partido.ganador.nombre}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {partido.ganador.goles}
+                      </td>
+
+                      <td className="border border-gray-300 px-4 py-2">
+                        {partido.perdedor.nombre}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {partido.perdedor.goles}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {partido.penaltis ? "Sí" : "No"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
       </div>
     </div>
   );
