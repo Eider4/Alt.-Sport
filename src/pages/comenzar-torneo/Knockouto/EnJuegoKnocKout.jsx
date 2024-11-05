@@ -1,22 +1,50 @@
 import { useEffect, useState } from "react";
 
-export default function EnJuegoKnocKout({ enjuego, minutosDeJuego }) {
+export default function EnJuegoKnocKout({
+  enjuego,
+  minutosDeJuego,
+  setGanadores,
+  setNumeroPartido,
+  numeroPartido,
+  otroPartido,
+  rondas,
+  isRunning,
+  setIsRunning,
+}) {
   const [equipo1, setEquipo1] = useState(enjuego.equipo1);
   const [equipo2, setEquipo2] = useState(enjuego.equipo2);
   const [TiempoJugando, setTiempoJugando] = useState(minutosDeJuego * 60);
-  const [isRunning, setIsRunning] = useState(false);
-  const [terminoJuego, setTerminoJuego] = useState(false);
+  const [TiempoJugandoMensaje, setTiempoJugandoMensaje] = useState(
+    minutosDeJuego * 60
+  );
+  // const [terminoJuego, setTerminoJuego] = useState(false);
+  const [empate, setEmpate] = useState(false);
+  const [GAnador, setGAnador] = useState(null);
 
   useEffect(() => {
     let timer;
     if (isRunning && TiempoJugando > 0) {
       timer = setTimeout(() => {
         setTiempoJugando((prev) => prev - 1);
+        handleTime();
       }, 1000);
     } else if (TiempoJugando === 0) {
       console.log("¡Termino el tiempo!");
+
       setIsRunning(false);
-      setTerminoJuego();
+      // setTerminoJuego();
+      const ganador =
+        equipo1.goles > equipo2.goles
+          ? equipo1
+          : equipo2.goles == equipo1.goles
+          ? "empate"
+          : equipo2;
+      if (ganador == "empate") {
+        setEmpate(true);
+        return;
+      } else {
+        setGAnador(ganador);
+      }
     }
     return () => clearTimeout(timer);
   }, [isRunning, TiempoJugando]);
@@ -25,16 +53,40 @@ export default function EnJuegoKnocKout({ enjuego, minutosDeJuego }) {
     setTiempoJugando(minutosDeJuego * 60);
     setIsRunning(true);
   };
+  useEffect(() => {
+    if (GAnador) {
+      console.log(GAnador);
+      setNumeroPartido((prev) => prev + 2);
+      setGanadores((prev) => ({
+        ...prev,
+        [`round1`]: {
+          ...prev[`round1`],
+          [`partido${numeroPartido}`]: GAnador,
+        },
+      }));
+      otroPartido();
+    }
+  }, [GAnador]);
+  const handleTime = () => {
+    TiempoJugando;
+
+    setTiempoJugandoMensaje(`minutos: `);
+  };
   return (
     <div className="flex flex-col items-center bg-gray-100 p-4 rounded-lg shadow-md">
       <p className="text-xl font-semibold mb-4 text-gray-700">
-        Tiempo: <span className="text-blue-600">{TiempoJugando}</span> segundos
+        Tiempo:{" "}
+        <span className="text-blue-600">
+          {/* {TiempoJugando > 60 ? "" : TiempoJugando} */}
+          {TiempoJugando}
+        </span>
+        segundos
       </p>
       <button
         onClick={iniciarConteo}
         className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
       >
-        Iniciar / Reiniciar Conteo
+        Iniciar
       </button>
 
       <div className="text-black mt-4">
@@ -97,7 +149,41 @@ export default function EnJuegoKnocKout({ enjuego, minutosDeJuego }) {
             </button>
           </p>
         </div>
+        {GAnador && <p>Ganador : {GAnador.nombre}</p>}
       </div>
+
+      {empate && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full transform transition-all duration-500 scale-100 opacity-100">
+            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+              ¡Empate!
+            </h2>
+            <p className="text-gray-600 mb-6 text-center">
+              Los equipos han quedado empatados. Selecciona el ganador:
+            </p>
+            <div className="flex space-x-4 justify-center">
+              <button
+                onClick={() => {
+                  setGAnador(equipo1);
+                  setEmpate(false);
+                }}
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-300 shadow-lg"
+              >
+                {equipo1.nombre}
+              </button>
+              <button
+                onClick={() => {
+                  setGAnador(equipo2);
+                  setEmpate(false);
+                }}
+                className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition duration-300 shadow-lg"
+              >
+                {equipo2.nombre}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

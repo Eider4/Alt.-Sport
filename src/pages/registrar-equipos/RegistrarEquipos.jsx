@@ -25,6 +25,12 @@ export default function RegistrarEquipos() {
   return (
     <div className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen p-6">
       <div className="max-w-lg mx-auto bg-white p-6 pb-2 rounded-lg shadow-xl transform transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 font-bold"
+        >
+          {"<--"}
+        </button>
         <h1 className="text-center text-3xl font-bold text-green-800 mb-6 animate-fade-in">
           Registrar Equipos
         </h1>
@@ -69,10 +75,7 @@ export default function RegistrarEquipos() {
         <div className="mt-6 space-y-4">
           {cantidadEquipos.length >= 0 &&
             cantidadEquipos.map((i) => (
-              <div
-                key={i}
-                className="p-4 bg-white border border-green-300 rounded-lg shadow-lg transition-all duration-300 transform hover:shadow-xl"
-              >
+              <div key={i}>
                 <UnEquipo
                   cantidadJugadores={cantidadJugadores}
                   conJugadores={conJugadores}
