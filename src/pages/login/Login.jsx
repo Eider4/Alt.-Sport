@@ -1,16 +1,19 @@
 import { useState } from "react";
 import useStoreUsuario from "../../store/manageUser";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [nombre, setNombre] = useState("");
   const createUser = useStoreUsuario((state) => state.createUser);
-
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     createUser(nombre);
-    sessionStorage.setItem("usuario", JSON.stringify(nombre));
+    localStorage.setItem("usuario", JSON.stringify(nombre));
+    navigate("/");
   };
-
+  if (localStorage.getItem("usuario"))
+    return <button onClick={() => navigate("/")}>Ya estas Registrado</button>;
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">

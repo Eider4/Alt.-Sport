@@ -2,7 +2,7 @@ import img from "../assets/knockout.png";
 
 export const torneos = [
   {
-    id: "1",
+    id: "de2d0c6a-a9ca-4208-8eb4-993e1cb10f45",
     nombre: "Knockouto",
     descripcion: "Torneo de Eliminación Directa",
     jugabilidad:
@@ -15,7 +15,7 @@ export const torneos = [
     ],
   },
   {
-    id: "2",
+    id: "5ed10018-54bd-47fb-bd94-371ff72ef76b",
     nombre: "Round Robin",
     descripcion: "Torneo de Liga o Todos contra Todos",
     jugabilidad: "Cada equipo juega contra todos los demás al menos una vez.",
@@ -27,7 +27,7 @@ export const torneos = [
     ],
   },
   {
-    id: "3",
+    id: "0a59861f-b1de-4306-ab6a-ad6287bc0b2e",
     nombre: "Grupo y Eliminación",
     descripcion: "Torneo de Fase de Grupo y Eliminación",
     jugabilidad:
@@ -40,7 +40,7 @@ export const torneos = [
     ],
   },
   {
-    id: "4",
+    id: "45e48101-3d1d-4f9b-96f9-8454a8b5808f",
     nombre: "Doble Eliminación",
     descripcion: "Torneo de Doble Eliminación",
     jugabilidad: "Cada equipo debe perder dos veces para ser eliminado.",
@@ -52,7 +52,7 @@ export const torneos = [
     ],
   },
   {
-    id: "5",
+    id: "2a04d6b5-cadb-4d94-b4c6-b8584be90480",
     nombre: "Torneo Suizo",
     descripcion: "Torneo con sistema Suizo",
     jugabilidad:
@@ -65,7 +65,7 @@ export const torneos = [
     ],
   },
   {
-    id: "6",
+    id: "c5cd5a81-4ffa-411e-858d-4c3b48a4d980",
     nombre: "Torneo Relámpago",
     descripcion: "Torneo corto con partidos rápidos",
     jugabilidad:
@@ -78,7 +78,7 @@ export const torneos = [
     ],
   },
   {
-    id: "7",
+    id: "975603c9-39a3-42c8-8b8a-e7e31f2bcf84",
     nombre: "Liguilla",
     descripcion: "Torneo de Fase Final después de una Liga",
     jugabilidad:
@@ -91,7 +91,7 @@ export const torneos = [
     ],
   },
   {
-    id: "8",
+    id: "19e0d179-8e71-41c1-b889-7c57eb5ddfc9",
     nombre: "Round Robin Doble",
     descripcion: "Torneo de Liga ida y vuelta",
     jugabilidad:
@@ -104,7 +104,7 @@ export const torneos = [
     ],
   },
   {
-    id: "9",
+    id: "3925f5ca-a69f-42cd-bcf1-34ae7364306f",
     nombre: "Eliminación Simple con Consolación",
     descripcion: "Eliminación directa con partidos de consolación",
     jugabilidad:
@@ -117,7 +117,7 @@ export const torneos = [
     ],
   },
   {
-    id: "10",
+    id: "9d44139c-3e5c-4b48-992e-92b879ab9f3f",
     nombre: "Torneo Escalonado",
     descripcion: "Equipos juegan en varias rondas con ascensos y descensos",
     jugabilidad:

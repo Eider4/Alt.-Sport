@@ -1,63 +1,85 @@
 import { useState } from "react";
+import UnEquipo from "./UnEquipo";
+import { useNavigate } from "react-router-dom";
 
-export default function UnEquipo({
-  cantidadJugadores,
-  conJugadores,
-  setEquipo,
-}) {
-  const [nombre, setNombre] = useState("");
-  const [jugadores, setJugadores] = useState({});
-  const [listo, setListo] = useState(false);
+export default function RegistrarEquipos() {
+  const [conJugadores, setConJugadores] = useState(false);
+  const [cantidadJugadores, setCantidadJugadores] = useState(3);
+  const [cantidadEquipos, setCantidadEquipos] = useState([1]);
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setJugadores((prev) => ({ ...prev, [name]: value }));
-    setEquipo((prev) => ({
-      ...prev,
-      [nombre.split(" ").join("%")]: { nombre, jugadores },
-    }));
-  };
+  const navigate = useNavigate();
+  const usuario = localStorage.getItem("usuario");
+
+  if (!usuario)
+    return (
+      <div className="flex justify-center items-center h-screen bg-gradient-to-b from-green-200 to-green-400">
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-lg transform hover:bg-green-700 hover:scale-105 transition duration-300 ease-in-out"
+        >
+          Registrarse
+        </button>
+      </div>
+    );
 
   return (
-    <div className="bg-gray-100 border-2 border-green-500 rounded-lg p-4 my-4 shadow-lg">
-      <input
-        disabled={listo}
-        type="text"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        placeholder="Nombre del equipo"
-        className="w-full px-3 py-2 mb-4 border border-green-300 rounded-lg focus:outline-none focus:ring focus:ring-green-200"
-      />
+    <div className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen p-6">
+      <div className="max-w-lg mx-auto bg-white p-6 pb-2 rounded-lg shadow-xl transform transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
+        <h1 className="text-center text-3xl font-bold text-green-800 mb-6 animate-fade-in">
+          Registrar Equipos
+        </h1>
 
-      <div
-        className={`transition-all duration-500 ease-in-out transform ${
-          listo
-            ? "max-h-0 opacity-0 scale-y-0"
-            : "max-h-screen opacity-100 scale-y-100"
-        } origin-top overflow-hidden`}
-      >
-        {conJugadores &&
-          Array.from({ length: cantidadJugadores }, (_, i) => (
-            <input
-              disabled={listo}
-              key={i}
-              type="text"
-              name={`jugador${i + 1}`}
-              onChange={handleInput}
-              placeholder={`Jugador ${i + 1}`}
-              className="w-full px-3 py-2 mb-2 border border-green-300 rounded-lg focus:outline-none focus:ring focus:ring-green-200"
-            />
-          ))}
-      </div>
+        <div className="mb-6 animate-slide-in">
+          <label className="block text-gray-700 font-semibold mb-2">
+            Cantidad de Jugadores
+          </label>
+          <input
+            type="number"
+            min={3}
+            max={20}
+            placeholder="5"
+            onChange={(e) => setCantidadJugadores(Number(e.target.value))}
+            value={cantidadJugadores}
+            className="w-full px-4 py-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300"
+          />
+        </div>
 
-      <div className="flex items-center space-x-2 mb-4">
-        <input
-          type="checkbox"
-          checked={listo}
-          onChange={(e) => setListo(e.target.checked)}
-          className="text-green-600 focus:ring-green-500 cursor-pointer"
-        />
-        <label className="text-gray-800 font-semibold">Equipo Listo</label>
+        <div className="flex items-center mb-6">
+          <input
+            type="checkbox"
+            checked={conJugadores}
+            onChange={(e) => setConJugadores(e.target.checked)}
+            className="mr-3 text-green-600 focus:ring focus:ring-green-400 transition-all duration-300 transform scale-110 cursor-pointer"
+          />
+          <label className="text-gray-700 font-semibold">
+            Incluir jugadores
+          </label>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setCantidadEquipos([...cantidadEquipos, crypto.randomUUID()]);
+          }}
+          className="w-full bg-green-600 text-white py-2 rounded-lg shadow-md transform transition-all duration-300 ease-in-out hover:bg-green-700 hover:scale-105"
+        >
+          Nuevo equipo
+        </button>
+
+        <div className="mt-6 space-y-4">
+          {cantidadEquipos.length >= 0 &&
+            cantidadEquipos.map((i) => (
+              <div
+                key={i}
+                className="p-4 bg-white border border-green-300 rounded-lg shadow-lg transition-all duration-300 transform hover:shadow-xl"
+              >
+                <UnEquipo
+                  cantidadJugadores={cantidadJugadores}
+                  conJugadores={conJugadores}
+                />
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

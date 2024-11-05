@@ -10,7 +10,7 @@ const useStoreUsuario = create(
         set((state) => ({
           usuario: {
             ...state.usuario,
-            equipos: { ...state.usuario.equipos, ...nuevosEquipo }, // Añade nuevo equipo al array
+            equipos: { ...state.usuario.equipos, ...nuevosEquipo },
           },
         })),
 
@@ -18,9 +18,25 @@ const useStoreUsuario = create(
         set((state) => ({
           usuario: { ...state.usuario, nombre: userName },
         })),
+
+      eliminarEquipo: (id_equipo) =>
+        set((state) => {
+          console.log(id_equipo);
+
+          const { [id_equipo]: _, ...nuevosEquipos } = state.usuario.equipos;
+
+          return {
+            usuario: {
+              ...state.usuario,
+              equipos: nuevosEquipos,
+            },
+          };
+        }),
+      addEquipo: (obj) =>
+        set((state) => (state.usuario.equipos[obj.id] = obj.object)),
     }),
     {
-      name: "store-usuario", // Clave de persistencia
+      name: "store-usuario",
     }
   )
 );
