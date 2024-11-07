@@ -3,7 +3,7 @@ import useStoreUsuario from "../../store/manageUser";
 import ComenzarTorneo from "./ComenzarTorneo";
 import { torneos } from "../../utils/torneos";
 import { useParams } from "react-router-dom";
-import { FaCheckSquare, FaRegSquare, FaPlayCircle } from "react-icons/fa";
+import { FaCheckSquare, FaPlayCircle } from "react-icons/fa";
 
 export const Torneo = () => {
   const { tipoTorneo } = useParams();
@@ -23,7 +23,6 @@ export const Torneo = () => {
   const borrarEquipo = (id) => {
     setEquipos(equipos.filter((equipo) => equipo.id != id));
   };
-  console.log(equipos);
   return (
     <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-300 max-w-3xl w-full mx-auto">
@@ -80,15 +79,17 @@ export const Torneo = () => {
           </div>
         </div>
 
-        <div className="text-center mt-8">
-          <button
-            onClick={() => setComenzar(true)}
-            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center"
-          >
-            <FaPlayCircle className="mr-2" />
-            Comenzar Torneo
-          </button>
-        </div>
+        {!comenzar && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setComenzar(true)}
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center"
+            >
+              <FaPlayCircle className="mr-2" />
+              Comenzar Torneo
+            </button>
+          </div>
+        )}
 
         {comenzar && (
           <div className="mt-8">

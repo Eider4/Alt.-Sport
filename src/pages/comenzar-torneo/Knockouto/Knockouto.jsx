@@ -6,20 +6,26 @@ export const Knockouto = ({ equipos: Equipos }) => {
   const [equipos, setEquipos] = useState(null);
   const [enjuego, setEnjuego] = useState(null);
   const [Ganadores, setGanadores] = useState({});
-  const [minutosDeJuego, setMinutosDeJuego] = useState(3);
+  const [minutosDeJuego, setMinutosDeJuego] = useState(5);
   const [numeroPartido, setNumeroPartido] = useState(0);
   const [rondas, setRondas] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [EstadisticasTorneo, setEstadisticasTorneo] = useState(null);
   const [active, setActive] = useState(false);
+  const [Ganador, setGanador] = useState(null);
   const handleJugar = (i, equipos = {}) => {
     if (Object.keys(equipos).length > i + 1) {
-      setEnjuego({
-        equipo1: { ...equipos[i], goles: 0 },
-        equipo2: { ...equipos[i + 1], goles: 0 },
-      });
-      setActive(true);
-      return;
+      if (equipos[i].nombre != equipos[i + 1].nombre) {
+        setEnjuego({
+          equipo1: { ...equipos[i], goles: 0 },
+          equipo2: { ...equipos[i + 1], goles: 0 },
+        });
+        setActive(true);
+        return;
+      } else {
+        setGanador(equipos[i]);
+        return;
+      }
     }
     setNumeroPartido(0);
   };
@@ -37,10 +43,12 @@ export const Knockouto = ({ equipos: Equipos }) => {
     setIsRunning(false);
     setEstadisticasTorneo(null);
     setActive(false);
+    setGanador(null);
   };
   const handleEquiposImpar = (equipos = Equipos) => {
     if (!equipos || equipos.length % 2 === 0) return equipos;
-    const equipoExtra = equipos[Math.floor(Math.random() * equipos.length)];
+
+    const equipoExtra = equipos[Math.floor(Math.random() * equipos.length - 1)];
     return [...equipos, equipoExtra];
   };
   useEffect(() => {
@@ -49,6 +57,8 @@ export const Knockouto = ({ equipos: Equipos }) => {
     }
   }, [Equipos]);
   useEffect(() => {
+    console.log(equipos);
+
     if (equipos) {
       setEquipos(equipos.sort(() => Math.random() - 0.5));
     }
@@ -57,6 +67,10 @@ export const Knockouto = ({ equipos: Equipos }) => {
     const PartidosDeRonda = Ganadores.round
       ? Object.values(Ganadores.round).map((equipo) => equipo.ganador)
       : [];
+    if (PartidosDeRonda.length <= 1) {
+      setEquipos([PartidosDeRonda[0]]);
+      return;
+    }
     const nuevosEquipos =
       PartidosDeRonda.length % 2 === 0
         ? PartidosDeRonda
@@ -85,7 +99,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
   return (
     <>
       <button
-        className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center"
+        className="px-6 py-3 w-full bg-blue-600 text-white font-semibold rounded-tl rounded-tr hover:bg-red-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center"
         onClick={reiniciarTorneo}
       >
         Reiniciar torneo
@@ -130,17 +144,13 @@ export const Knockouto = ({ equipos: Equipos }) => {
           {equipos &&
             equipos.length > 0 &&
             equipos.map((item, i) => {
+              if (!item) return;
               const isActive = i === numeroPartido || i - 1 === numeroPartido;
-              const wonLastRound = Object.keys(Ganadores).some((key) => {
-                return Object.values(Ganadores[key]).some(
-                  (e) => e.ganador.nombre === item.nombre
-                );
-              });
+
               const isPAr = i % 2 === 0;
-              let m = isPAr ? "mr-10" : "";
 
               return (
-                <div key={i} className="relative">
+                <div key={i} className={`relative  `}>
                   <div
                     onClick={() => handleJugar(i, equipos)}
                     className={`p-4 rounded-lg cursor-pointer shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105 ${
@@ -149,7 +159,9 @@ export const Knockouto = ({ equipos: Equipos }) => {
                         : i % 2 === 0
                         ? "bg-green-200 text-black "
                         : "bg-green-800 text-white"
-                    } ${wonLastRound ? "border-4 border-yellow-400" : ""}`}
+                    } 
+                    ${Ganador ? "bg-amber-400" : ""}
+                    `}
                   >
                     <p className="text-center font-semibold">{item.nombre}</p>
                     {isActive && isRunning && (
@@ -159,7 +171,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
                       </span>
                     )}
                   </div>
-                  {isPAr ? (
+                  {isPAr && !Ganador ? (
                     <p className="text-center text-gray-800">Vs</p>
                   ) : (
                     <>
