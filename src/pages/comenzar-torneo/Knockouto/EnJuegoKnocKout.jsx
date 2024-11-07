@@ -85,11 +85,11 @@ export default function EnJuegoKnocKout({
       <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-xl">
         <p className="text-xl font-semibold mb-2 text-gray-700">Tiempo:</p>
         <p className="text-lg mb-4 text-gray-700">
-          <span className="font-bold text-blue-800">
+          <span className="font-bold mr-2 text-blue-800">
             {minutosJugandoMensaje}
           </span>
           Minutos,
-          <span className="font-bold text-blue-800">
+          <span className="font-bold ml-2 mr-2 text-blue-800">
             {segundosJugandoMensaje}
           </span>
           Segundos

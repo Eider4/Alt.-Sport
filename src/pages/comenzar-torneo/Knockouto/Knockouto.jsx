@@ -6,7 +6,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
   const [equipos, setEquipos] = useState(null);
   const [enjuego, setEnjuego] = useState(null);
   const [Ganadores, setGanadores] = useState({});
-  const [minutosDeJuego, setMinutosDeJuego] = useState(5);
+  const [minutosDeJuego, setMinutosDeJuego] = useState(0.05);
   const [numeroPartido, setNumeroPartido] = useState(0);
   const [rondas, setRondas] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -47,20 +47,19 @@ export const Knockouto = ({ equipos: Equipos }) => {
   };
   const handleEquiposImpar = (equipos = Equipos) => {
     if (!equipos || equipos.length % 2 === 0) return equipos;
-
-    const equipoExtra = equipos[Math.floor(Math.random() * equipos.length - 1)];
-    return [...equipos, equipoExtra];
+    const equipoExtra = equipos.slice(0, -1).sort(() => Math.random() - 0.5)[0];
+    const f = [...equipos, equipoExtra];
+    return f;
   };
+
   useEffect(() => {
     if (!equipos) {
       setEquipos(Equipos);
     }
   }, [Equipos]);
   useEffect(() => {
-    console.log(equipos);
-
     if (equipos) {
-      setEquipos(equipos.sort(() => Math.random() - 0.5));
+      setEquipos(handleEquiposImpar(equipos.sort(() => Math.random() - 0.5)));
     }
     if (!equipos || equipos.length > 0) return;
     setRondas((prevRondas) => prevRondas + 1);
