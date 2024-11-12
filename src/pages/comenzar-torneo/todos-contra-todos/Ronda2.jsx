@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EnJuegoKnocKout from "../Knockouto/EnJuegoKnocKout";
+import Tabla from "./tabla";
 // let resultadosRonda1 = {
 //   grupo1: {
 //     partido0: {
@@ -326,54 +327,7 @@ export default function Ronda2({
             <div>
               {ganadoresRonda &&
                 Object.values(ganadoresRonda.round).length > 0 && (
-                  <div>
-                    <div>
-                      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <table className="min-w-full table-auto text-sm text-gray-700">
-                          <thead className="bg-gray-800 text-white">
-                            <tr>
-                              <th className="px-6 py-3 text-left">Ganador</th>
-                              <th className="px-6 py-3 text-left">Goles</th>
-                              <th className="px-6 py-3 text-left">Puntos</th>
-                              <th className="px-6 py-3 text-left">Perdedor</th>
-                              <th className="px-6 py-3 text-left">Goles</th>
-                              <th className="px-6 py-3 text-left">Puntos</th>
-                              <th className="px-6 py-3 text-left">Penaltis</th>
-                            </tr>
-                          </thead>
-                          {Object.values(ganadoresRonda.round).map(
-                            (partido, index) => (
-                              <tbody key={index}>
-                                <tr className="border-t border-gray-300 hover:bg-gray-50">
-                                  <td className="px-6 py-4 text-left font-medium text-gray-800">
-                                    {partido.ganador.nombre}
-                                  </td>
-                                  <td className="px-6 py-4 text-center text-gray-800">
-                                    {partido.ganador.goles}
-                                  </td>
-                                  <td className="px-6 py-4 text-center text-gray-800">
-                                    {partido.ganador.golesTotales * 3}
-                                  </td>
-                                  <td className="px-6 py-4 text-left font-medium text-gray-800">
-                                    {partido.perdedor.nombre}
-                                  </td>
-                                  <td className="px-6 py-4 text-center text-gray-800">
-                                    {partido.perdedor.goles}
-                                  </td>
-                                  <td className="px-6 py-4 text-center text-gray-800">
-                                    {partido.perdedor.golesTotales * 3}
-                                  </td>
-                                  <td className="px-6 py-4 text-center">
-                                    {partido.penaltis ? "Si" : "No"}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            )
-                          )}
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+                  <Tabla ganadoresRonda={ganadoresRonda.round} />
                 )}
             </div>
           </div>

@@ -44,15 +44,6 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
       <h1 className="text-3xl font-bold text-gray-800 my-4">
         Todos contra todos
       </h1>
-      <div>
-        <input
-          type="number"
-          value={minutosDeJuego}
-          min={0}
-          max={90}
-          onChange={(e) => setMinutosDeJuego(e.target.value)}
-        />
-      </div>
       <div className="flex flex-col md:flex-row gap-4">
         <div className="cursor-pointer bg-white shadow-md p-4 rounded-lg border border-gray-200 hover:shadow-lg transition duration-300 ease-in-out">
           <h2 className="text-xl font-semibold text-gray-700 mb-2">Grupo 1</h2>
@@ -87,6 +78,25 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
             </div>
           )}
         </div>
+        <div className="flex flex-col items-center sm:items-start space-y-4 sm:space-y-2">
+          <div className="w-full max-w-xs sm:max-w-sm">
+            <label
+              htmlFor="minutosDeJuego"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Minutos de juego
+            </label>
+            <input
+              id="minutosDeJuego"
+              type="number"
+              value={minutosDeJuego}
+              min={0}
+              max={90}
+              onChange={(e) => setMinutosDeJuego(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-300 ease-in-out"
+            />
+          </div>
+        </div>
       </div>
 
       {grupo1 && grupo2 && (
@@ -118,7 +128,9 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
             setGanadoresRonda2={setGanadoresRonda2}
           />
         )}
-      {GanadoresRonda2 && <Ronda3 equipos={GanadoresRonda2} />}
+      {GanadoresRonda2 && (
+        <Ronda3 equipos={GanadoresRonda2} minutosDeJuego={minutosDeJuego} />
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EnJuegoKnocKout from "../Knockouto/EnJuegoKnocKout";
+import Tabla from "./tabla";
 
 export default function Ronda1({
   grupo,
@@ -42,8 +43,8 @@ export default function Ronda1({
     f_comenzarPartido(partidos[f]);
   };
   useEffect(() => {
-    console.log(ganadoresRonda.round);
-  }, [ganadoresRonda]);
+    console.log(EquiposEnJuego);
+  }, [EquiposEnJuego]);
 
   return (
     <div>
@@ -59,16 +60,25 @@ export default function Ronda1({
                 <p>{grupo[0].nombre}</p>
                 <span>Vs</span>
                 <p>{grupo[1].nombre}</p>
+                {EquiposEnJuego && EquiposEnJuego.equipo1 == grupo[0].nombre
+                  ? "jugando..."
+                  : ""}
               </div>
               <div className="flex items-center gap-2">
                 <p>{grupo[1].nombre}</p>
                 <span>Vs</span>
                 <p>{grupo[2].nombre}</p>
+                {EquiposEnJuego && EquiposEnJuego.equipo1 == grupo[1].nombre
+                  ? "jugando..."
+                  : ""}
               </div>
               <div className="flex items-center gap-2">
                 <p>{grupo[2].nombre}</p>
                 <span>Vs</span>
                 <p>{grupo[0].nombre}</p>
+                {EquiposEnJuego && EquiposEnJuego.equipo1 == grupo[2].nombre
+                  ? "jugando..."
+                  : ""}
               </div>
               <button
                 className={`bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition duration-300 ease-in-out ${
@@ -84,52 +94,7 @@ export default function Ronda1({
       </div>
       <div>
         {ganadoresRonda && Object.values(ganadoresRonda.round).length > 0 && (
-          <div>
-            <div>
-              <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-                <table className="min-w-full table-auto text-sm text-gray-700">
-                  <thead className="bg-gray-800 text-white">
-                    <tr>
-                      <th className="px-6 py-3 text-left">Ganador</th>
-                      <th className="px-6 py-3 text-left">Goles</th>
-                      <th className="px-6 py-3 text-left">Puntos</th>
-                      <th className="px-6 py-3 text-left">Perdedor</th>
-                      <th className="px-6 py-3 text-left">Goles</th>
-                      <th className="px-6 py-3 text-left">Puntos</th>
-                      <th className="px-6 py-3 text-left">Penaltis</th>
-                    </tr>
-                  </thead>
-                  {Object.values(ganadoresRonda.round).map((partido, index) => (
-                    <tbody key={index}>
-                      <tr className="border-t border-gray-300 hover:bg-gray-50">
-                        <td className="px-6 py-4 text-left font-medium text-gray-800">
-                          {partido.ganador.nombre}
-                        </td>
-                        <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.ganador.goles}
-                        </td>
-                        <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.ganador.golesTotales * 3}
-                        </td>
-                        <td className="px-6 py-4 text-left font-medium text-gray-800">
-                          {partido.perdedor.nombre}
-                        </td>
-                        <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.perdedor.goles}
-                        </td>
-                        <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.perdedor.golesTotales * 3}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {partido.penaltis ? "Si" : "No"}
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-              </div>
-            </div>
-          </div>
+          <Tabla ganadoresRonda={ganadoresRonda.round} />
         )}
       </div>
       {comenzar && (

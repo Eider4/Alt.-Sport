@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import EnJuegoKnocKout from "../Knockouto/EnJuegoKnocKout";
+import Tabla from "./tabla";
 
-export default function Ronda3({ equipos: Equipos }) {
+export default function Ronda3({ equipos: Equipos, minutosDeJuego }) {
   const [equipos, setEquipos] = useState([]);
   const [numeroPartido, setNumeroPartido] = useState(0);
   const [enjuego, setEnjuego] = useState(0);
-  const [Ganador, setGanador] = useState(null);
   const [Ganadores, setGanadores] = useState({});
   const [isRunning, setIsRunning] = useState(false);
   const [final, setFinal] = useState(false);
@@ -23,10 +23,8 @@ export default function Ronda3({ equipos: Equipos }) {
           equipo2: { ...equipos[i + 1], goles: 0 },
         });
         return;
-      } else {
-        setGanador(equipos[i]);
-        return;
       }
+      return;
     }
     setNumeroPartido(0);
   };
@@ -34,8 +32,6 @@ export default function Ronda3({ equipos: Equipos }) {
     setEnjuego({});
     handleJugar(numeroPartido + 2, equipos);
   };
-  console.log("Ganadores", Ganadores);
-  console.log("Ganador", Ganador);
   return (
     <div>
       <button onClick={f_revolverEquipos}>revolver</button>
@@ -77,7 +73,7 @@ export default function Ronda3({ equipos: Equipos }) {
       </div>
       <EnJuegoKnocKout
         enjuego={enjuego}
-        minutosDeJuego={1}
+        minutosDeJuego={minutosDeJuego}
         setGanadores={setGanadores}
         setNumeroPartido={setNumeroPartido}
         numeroPartido={numeroPartido}
@@ -87,6 +83,9 @@ export default function Ronda3({ equipos: Equipos }) {
         final={final}
       />
 
+      {Object.keys(Ganadores).length > 0 && (
+        <Tabla ganadoresRonda={Ganadores.round} />
+      )}
       {Object.keys(Ganadores).length > 0 &&
         Object.keys(Ganadores.round).length >= 2 && (
           <div className="p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto mt-8">

@@ -24,7 +24,7 @@ export default function EnJuegoKnocKout({
   const [segundosJugandoMensaje, setSegundosJugandoMensaje] = useState();
   const [empate, setEmpate] = useState(false);
   const [GAnador, setGAnador] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(true); // Estado para el menú hamburguesa
+  const [menuOpen, setMenuOpen] = useState(true);
 
   useEffect(() => {
     if (EquiposEnJuego.equipo1 && EquiposEnJuego.equipo2) {
@@ -47,14 +47,27 @@ export default function EnJuegoKnocKout({
       setIsRunning(false);
       const ganador =
         equipo1.goles > equipo2.goles
-          ? { ganador: equipo1, perdedor: equipo2 }
+          ? {
+              ganador: { ...equipo1, golesTotales: equipo1.golesTotales + 2 },
+              perdedor: equipo2,
+            }
           : equipo2.goles === equipo1.goles
           ? "empate"
-          : { ganador: equipo2, perdedor: equipo1 };
+          : {
+              ganador: { ...equipo2, golesTotales: equipo1.golesTotales + 2 },
+              perdedor: equipo1,
+            };
       if (ganador === "empate") {
         setEmpate(true);
       } else {
-        setGAnador({ ...ganador, penaltis: false });
+        console.log({
+          ...ganador,
+          penaltis: false,
+        });
+        setGAnador({
+          ...ganador,
+          penaltis: false,
+        });
       }
     }
     return () => clearTimeout(timer);
@@ -101,11 +114,11 @@ export default function EnJuegoKnocKout({
   if (!equipo1 || !equipo2) return null;
 
   return (
-    <div
-      onClick={() => setMenuOpen(!menuOpen)}
-      className="fixed cursor-pointer top-8 right-10 p-4 pb-1 bg-gray-800 text-white rounded-lg shadow-lg"
-    >
-      <button className="text-white bg-gray-700 p-2 rounded-md hover:bg-gray-800 transition duration-200 ease-in-out focus:outline-none">
+    <div className="fixed cursor-pointer top-8 right-10 p-4 pb-1 bg-gray-800 text-white rounded-lg shadow-lg">
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="text-white bg-gray-700 p-2 rounded-md hover:bg-gray-800 transition duration-200 ease-in-out focus:outline-none"
+      >
         <IoTimer size={24} />
       </button>
       <p className="text-lg  text-gray-700 ">
@@ -250,7 +263,10 @@ export default function EnJuegoKnocKout({
                             ...equipo1,
                             golesTotales: equipo1.golesTotales + 2,
                           },
-                          perdedor: equipo2,
+                          perdedor: {
+                            ...equipo2,
+                            golesTotales: equipo2.golesTotales + 1,
+                          },
                           penaltis: true,
                         });
                         setEmpate(false);
@@ -262,8 +278,14 @@ export default function EnJuegoKnocKout({
                     <button
                       onClick={() => {
                         setGAnador({
-                          ganador: equipo2,
-                          perdedor: equipo1,
+                          ganador: {
+                            ...equipo2,
+                            golesTotales: equipo2.golesTotales + 2,
+                          },
+                          perdedor: {
+                            ...equipo1,
+                            golesTotales: equipo1.golesTotales + 1,
+                          },
                           penaltis: true,
                         });
                         setEmpate(false);
