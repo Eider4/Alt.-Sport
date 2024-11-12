@@ -92,10 +92,10 @@ export default function Ronda1({
                     <tr>
                       <th className="px-6 py-3 text-left">Ganador</th>
                       <th className="px-6 py-3 text-left">Goles</th>
-                      <th className="px-6 py-3 text-left">Goles Totales</th>
+                      <th className="px-6 py-3 text-left">Puntos</th>
                       <th className="px-6 py-3 text-left">Perdedor</th>
                       <th className="px-6 py-3 text-left">Goles</th>
-                      <th className="px-6 py-3 text-left">Goles Totales</th>
+                      <th className="px-6 py-3 text-left">Puntos</th>
                       <th className="px-6 py-3 text-left">Penaltis</th>
                     </tr>
                   </thead>
@@ -109,7 +109,7 @@ export default function Ronda1({
                           {partido.ganador.goles}
                         </td>
                         <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.ganador.golesTotales}
+                          {partido.ganador.golesTotales * 3}
                         </td>
                         <td className="px-6 py-4 text-left font-medium text-gray-800">
                           {partido.perdedor.nombre}
@@ -118,7 +118,7 @@ export default function Ronda1({
                           {partido.perdedor.goles}
                         </td>
                         <td className="px-6 py-4 text-center text-gray-800">
-                          {partido.perdedor.golesTotales}
+                          {partido.perdedor.golesTotales * 3}
                         </td>
                         <td className="px-6 py-4 text-center">
                           {partido.penaltis ? "Si" : "No"}

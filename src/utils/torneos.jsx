@@ -1,5 +1,5 @@
 import img from "../assets/knockout.png";
-
+import roundRobin from "../assets/round-robin.webp";
 export const torneos = [
   {
     id: "de2d0c6a-a9ca-4208-8eb4-993e1cb10f45",
@@ -19,7 +19,7 @@ export const torneos = [
     nombre: "Round Robin",
     descripcion: "Torneo de Liga o Todos contra Todos",
     jugabilidad: "Cada equipo juega contra todos los demás al menos una vez.",
-    img,
+    img: roundRobin,
     reglas: [
       "3 puntos por victoria, 1 por empate, 0 por derrota.",
       "Gana el equipo con más puntos al final.",

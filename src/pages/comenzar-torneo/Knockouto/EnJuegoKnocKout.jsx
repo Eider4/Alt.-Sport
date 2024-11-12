@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { GoX } from "react-icons/go";
+import { IoTimer } from "react-icons/io5";
 
 export default function EnJuegoKnocKout({
   enjuego: EquiposEnJuego,
@@ -22,12 +24,12 @@ export default function EnJuegoKnocKout({
   const [segundosJugandoMensaje, setSegundosJugandoMensaje] = useState();
   const [empate, setEmpate] = useState(false);
   const [GAnador, setGAnador] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(true); // Estado para el menú hamburguesa
+
   useEffect(() => {
-    console.log(EquiposEnJuego.equipo1 && EquiposEnJuego.equipo2);
     if (EquiposEnJuego.equipo1 && EquiposEnJuego.equipo2) {
       const e1 = EquiposEnJuego.equipo1;
       const e2 = EquiposEnJuego.equipo2;
-      console.log(e1);
       e1.goles = 0;
       e2.goles = 0;
       setEquipo1(e1);
@@ -63,11 +65,9 @@ export default function EnJuegoKnocKout({
   }, [TiempoJugando]);
 
   const iniciarConteo = () => {
-    {
-      if (comenzar) {
-        setTiempoJugando(minutosDeJuego * 60);
-        setIsRunning(true);
-      }
+    if (comenzar) {
+      setTiempoJugando(minutosDeJuego * 60);
+      setIsRunning(true);
     }
   };
 
@@ -98,159 +98,187 @@ export default function EnJuegoKnocKout({
     setSegundosJugandoMensaje(TiempoJugando % 60);
   };
 
-  if (!equipo1 || !equipo2) return;
-  return (
-    <div className="fixed top-8 right-10 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
-      <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-xl">
-        <p className="text-xl font-semibold mb-2 text-gray-700">Tiempo:</p>
-        <p className="text-lg mb-4 text-gray-700">
-          <span className="font-bold mr-2 text-blue-800">
-            {minutosJugandoMensaje}
-          </span>
-          Minutos,
-          <span className="font-bold ml-2 mr-2 text-blue-800">
-            {segundosJugandoMensaje}
-          </span>
-          Segundos
-        </p>
+  if (!equipo1 || !equipo2) return null;
 
-        {GAnador ? (
-          <>
-            {!final && (
+  return (
+    <div
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="fixed cursor-pointer top-8 right-10 p-4 pb-1 bg-gray-800 text-white rounded-lg shadow-lg"
+    >
+      <button className="text-white bg-gray-700 p-2 rounded-md hover:bg-gray-800 transition duration-200 ease-in-out focus:outline-none">
+        <IoTimer size={24} />
+      </button>
+      <p className="text-lg  text-gray-700 ">
+        <span className="font-bold mr-2 text-blue-400">
+          {minutosJugandoMensaje}:{segundosJugandoMensaje}
+        </span>
+      </p>
+
+      {menuOpen && (
+        <div className="fixed top-8 right-10 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          <div className="flex relative flex-col items-center bg-white p-6 rounded-lg shadow-xl">
+            <button
+              className="text-white absolute top-2 left-2 bg-gray-700 p-2 rounded-md hover:bg-gray-800 transition duration-200 ease-in-out focus:outline-none"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <GoX size={24} />
+            </button>
+            <p className="text-xl font-semibold mb-2 text-gray-700">Tiempo:</p>
+            <p className="text-lg mb-4 text-gray-700">
+              <span className="font-bold mr-2 text-blue-800">
+                {minutosJugandoMensaje}
+              </span>
+              Minutos,
+              <span className="font-bold ml-2 mr-2 text-blue-800">
+                {segundosJugandoMensaje}
+              </span>
+              Segundos
+            </p>
+
+            {GAnador ? (
+              <>
+                {!final && (
+                  <button
+                    onClick={handleGanador}
+                    className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-md hover:bg-blue-800 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  >
+                    Siguiente
+                  </button>
+                )}
+              </>
+            ) : (
               <button
-                onClick={handleGanador}
+                onClick={iniciarConteo}
                 className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-md hover:bg-blue-800 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               >
-                Siguiente
+                Iniciar
               </button>
             )}
-          </>
-        ) : (
-          <button
-            onClick={iniciarConteo}
-            className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-md hover:bg-blue-800 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            Iniciar
-          </button>
-        )}
 
-        {equipo1 && equipo2 && (
-          <div className="text-gray-900 mt-6 w-full">
-            <h2 className="font-bold mb-2 text-gray-800">Equipos jugando</h2>
-            <div className="mb-4">
-              <h3 className="font-semibold text-lg text-gray-800">
-                {equipo1.nombre}
-              </h3>
-              <p className="flex items-center">
-                <button
-                  onClick={() =>
-                    setEquipo1((prev) => ({
-                      ...prev,
-                      goles: Math.max(prev.goles - 1, 0),
-                      golesTotales: Math.max(prev.golesTotales - 1, 0),
-                    }))
-                  }
-                  className="px-2 py-1 bg-gray-600 text-white font-bold rounded mr-2 hover:bg-gray-700"
-                >
-                  -
-                </button>
-                Goles: <span className="mx-2">{equipo1.goles}</span>
-                <button
-                  onClick={() =>
-                    setEquipo1((prev) => ({
-                      ...prev,
-                      golesTotales: prev.golesTotales + 1,
-                      goles: prev.goles + 1,
-                    }))
-                  }
-                  className="px-2 py-1 bg-green-600 text-white font-bold rounded ml-2 hover:bg-green-700"
-                >
-                  +
-                </button>
-              </p>
-            </div>
+            {equipo1 && equipo2 && (
+              <div className="text-gray-900 mt-6 w-full">
+                <h2 className="font-bold mb-2 text-gray-800">
+                  Equipos jugando
+                </h2>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg text-gray-800">
+                    {equipo1.nombre}
+                  </h3>
+                  <p className="flex items-center">
+                    <button
+                      onClick={() =>
+                        setEquipo1((prev) => ({
+                          ...prev,
+                          goles: Math.max(prev.goles - 1, 0),
+                          golesTotales: Math.max(prev.golesTotales - 1, 0),
+                        }))
+                      }
+                      className="px-2 py-1 bg-gray-600 text-white font-bold rounded mr-2 hover:bg-gray-700"
+                    >
+                      -
+                    </button>
+                    Goles: <span className="mx-2">{equipo1.goles}</span>
+                    <button
+                      onClick={() =>
+                        setEquipo1((prev) => ({
+                          ...prev,
+                          golesTotales: prev.golesTotales + 1,
+                          goles: prev.goles + 1,
+                        }))
+                      }
+                      className="px-2 py-1 bg-green-600 text-white font-bold rounded ml-2 hover:bg-green-700"
+                    >
+                      +
+                    </button>
+                  </p>
+                </div>
 
-            <div>
-              <h3 className="font-semibold text-lg text-gray-800">
-                {equipo2.nombre}
-              </h3>
-              <p className="flex items-center">
-                <button
-                  onClick={() =>
-                    setEquipo2((prev) => ({
-                      ...prev,
-                      golesTotales: Math.max(prev.golesTotales - 1, 0),
-                      goles: Math.max(prev.goles - 1, 0),
-                    }))
-                  }
-                  className="px-2 py-1 bg-gray-600 text-white font-bold rounded mr-2 hover:bg-gray-700"
-                >
-                  -
-                </button>
-                Goles: <span className="mx-2">{equipo2.goles}</span>
-                <button
-                  onClick={() =>
-                    setEquipo2((prev) => ({
-                      ...prev,
-                      golesTotales: prev.golesTotales + 1,
-                      goles: prev.goles + 1,
-                    }))
-                  }
-                  className="px-2 py-1 bg-green-600 text-white font-bold rounded ml-2 hover:bg-green-700"
-                >
-                  +
-                </button>
-              </p>
-            </div>
-            {GAnador && (
-              <p className="mt-4 font-bold text-gray-800">
-                Ganador: {GAnador.ganador.nombre}
-              </p>
+                <div>
+                  <h3 className="font-semibold text-lg text-gray-800">
+                    {equipo2.nombre}
+                  </h3>
+                  <p className="flex items-center">
+                    <button
+                      onClick={() =>
+                        setEquipo2((prev) => ({
+                          ...prev,
+                          golesTotales: Math.max(prev.golesTotales - 1, 0),
+                          goles: Math.max(prev.goles - 1, 0),
+                        }))
+                      }
+                      className="px-2 py-1 bg-gray-600 text-white font-bold rounded mr-2 hover:bg-gray-700"
+                    >
+                      -
+                    </button>
+                    Goles: <span className="mx-2">{equipo2.goles}</span>
+                    <button
+                      onClick={() =>
+                        setEquipo2((prev) => ({
+                          ...prev,
+                          golesTotales: prev.golesTotales + 1,
+                          goles: prev.goles + 1,
+                        }))
+                      }
+                      className="px-2 py-1 bg-green-600 text-white font-bold rounded ml-2 hover:bg-green-700"
+                    >
+                      +
+                    </button>
+                  </p>
+                </div>
+                {GAnador && (
+                  <p className="mt-4 font-bold text-gray-800">
+                    Ganador: {GAnador.ganador.nombre}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {empate && (
+              <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
+                  <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+                    ¡Empate!
+                  </h2>
+                  <p className="text-gray-600 mb-6 text-center">
+                    Los equipos han quedado empatados. Selecciona el ganador:
+                  </p>
+                  <div className="flex space-x-4 justify-center">
+                    <button
+                      onClick={() => {
+                        setGAnador({
+                          ganador: {
+                            ...equipo1,
+                            golesTotales: equipo1.golesTotales + 2,
+                          },
+                          perdedor: equipo2,
+                          penaltis: true,
+                        });
+                        setEmpate(false);
+                      }}
+                      className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-500 transition duration-300 shadow-lg"
+                    >
+                      {equipo1.nombre}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setGAnador({
+                          ganador: equipo2,
+                          perdedor: equipo1,
+                          penaltis: true,
+                        });
+                        setEmpate(false);
+                      }}
+                      className="bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-500 transition duration-300 shadow-lg"
+                    >
+                      {equipo2.nombre}
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
-        )}
-
-        {empate && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
-              <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-                ¡Empate!
-              </h2>
-              <p className="text-gray-600 mb-6 text-center">
-                Los equipos han quedado empatados. Selecciona el ganador:
-              </p>
-              <div className="flex space-x-4 justify-center">
-                <button
-                  onClick={() => {
-                    setGAnador({
-                      ganador: equipo1,
-                      perdedor: equipo2,
-                      penaltis: true,
-                    });
-                    setEmpate(false);
-                  }}
-                  className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-500 transition duration-300 shadow-lg"
-                >
-                  {equipo1.nombre}
-                </button>
-                <button
-                  onClick={() => {
-                    setGAnador({
-                      ganador: equipo2,
-                      perdedor: equipo1,
-                      penaltis: true,
-                    });
-                    setEmpate(false);
-                  }}
-                  className="bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-500 transition duration-300 shadow-lg"
-                >
-                  {equipo2.nombre}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
