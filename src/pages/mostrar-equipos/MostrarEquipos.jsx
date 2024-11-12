@@ -1,13 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useStoreUsuario from "../../store/manageUser";
 import { useState, useEffect } from "react";
-import {
-  FaPlus,
-  FaPlay,
-  FaTrashAlt,
-  FaCheckSquare,
-  FaRegSquare,
-} from "react-icons/fa"; // Iconos de react-icons
+import { FaPlus, FaPlay, FaTrashAlt, FaBars, FaTimes } from "react-icons/fa";
 
 export default function MostrarEquipos() {
   const equipos = useStoreUsuario((state) => state.usuario.equipos);
@@ -18,6 +12,10 @@ export default function MostrarEquipos() {
   const [Error, setError] = useState("");
   const navigate = useNavigate();
   const { tipoTorneo } = useParams();
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   if (!localStorage.getItem("usuario"))
     return (
@@ -53,7 +51,6 @@ export default function MostrarEquipos() {
       setSeleccionarTodo(true);
     }
   }, [EquiposSeleccionados]);
-
   const seleccionado = (e, key) => {
     const agregar = e.target.checked;
     if (agregar) {
@@ -62,7 +59,6 @@ export default function MostrarEquipos() {
       setEquiposSeleccionados((prev) => prev.filter((item) => item !== key));
     }
   };
-
   const seleccionarTodos = (e) => {
     const allSelected = e.target.checked;
 
@@ -79,13 +75,23 @@ export default function MostrarEquipos() {
 
   return (
     <div className=" bg-gray-100 min-h-screen">
-      <nav className="bg-green-50 shadow-md  p-4  fixed w-full">
-        <h1 className="text-3xl font-bold text-center mb-4 text-green-600">
-          Lista de Equipos
-        </h1>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0 sm:space-x-4">
-          {/* Botón Agregar Equipos */}
+      <nav className="bg-green-50 shadow-md p-4 fixed w-full">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-green-600">
+            Lista de Equipos
+          </h1>
+          <button
+            onClick={toggleMenu}
+            className="text-green-600 sm:hidden focus:outline-none"
+          >
+            {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
+        </div>
+        <div
+          className={`${
+            menuOpen ? "block" : "hidden"
+          } sm:flex sm:items-center sm:space-x-4 sm:justify-between mt-4`}
+        >
           <button
             onClick={() => navigate("/registrar-equipos")}
             className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
@@ -93,20 +99,16 @@ export default function MostrarEquipos() {
             <FaPlus className="mr-2" /> Agregar Equipos
           </button>
 
-          {/* Checkbox Seleccionar */}
-          <div className="flex items-center">
+          <div className="flex items-center mt-2 sm:mt-0">
             <input
               type="checkbox"
               checked={seleccionar}
               onChange={(e) => setSeleccionar(e.target.checked)}
               className="mr-2 text-green-600 focus:ring focus:ring-green-200"
             />
-            <label className="text-gray-700 flex items-center">
-              Seleccionar
-            </label>
+            <label className="text-gray-700">Seleccionar</label>
           </div>
 
-          {/* Checkbox Seleccionar todos */}
           <div className="flex items-center">
             <div
               onClick={() =>
@@ -126,18 +128,17 @@ export default function MostrarEquipos() {
               Seleccionar todos
             </label>
           </div>
-          <p>Equipos seleccionados: {EquiposSeleccionados.length}</p>
-          {/* Botón Comenzar Torneo */}
+          <p>{Error}</p>
           <button
             onClick={() => {
               if (
                 EquiposSeleccionados.length > 6 &&
-                tipoTorneo == "5ed10018-54bd-47fb-bd94-371ff72ef76b"
+                tipoTorneo === "5ed10018-54bd-47fb-bd94-371ff72ef76b"
               )
                 return setError("Debes ingresar solo 6 equipos");
               if (
                 EquiposSeleccionados.length < 6 &&
-                tipoTorneo == "5ed10018-54bd-47fb-bd94-371ff72ef76b"
+                tipoTorneo === "5ed10018-54bd-47fb-bd94-371ff72ef76b"
               )
                 return setError("Debes ingresar 6 equipos");
 
@@ -147,13 +148,12 @@ export default function MostrarEquipos() {
               );
               navigate(`/comenzar-torneo/${tipoTorneo}`);
             }}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
+            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200 mt-2 sm:mt-0"
           >
             <FaPlay className="mr-2" /> Comenzar torneo
           </button>
-          <p>{Error}</p>
         </div>
-      </nav>{" "}
+      </nav>
       <div className="p-6 bg-gray-100 min-h-screen">
         <h1 className="text-3xl font-bold text-center mb-8 text-green-600">
           Lista de Equipos

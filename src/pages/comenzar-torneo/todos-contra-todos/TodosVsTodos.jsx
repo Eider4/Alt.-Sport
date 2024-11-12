@@ -23,6 +23,13 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
   }, []);
 
   const f_reiniciarTorneo = () => {
+    setGrupo1(null);
+    setGrupo2(null);
+    setMinutosDeJuego(5);
+    setFinalizadoRonda1(false);
+    setFinalizadoRonda1Gb(false);
+    setResultadosRonda1(false);
+    setGanadoresRonda2(null);
     f_inicializarGrupos();
   };
   return (
