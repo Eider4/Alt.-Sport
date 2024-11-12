@@ -130,7 +130,7 @@ export default function MostrarEquipos() {
           <button
             onClick={() => {
               localStorage.setItem(
-                "equiposEnJuego",
+                tipoTorneo,
                 JSON.stringify(EquiposSeleccionados)
               );
               navigate(`/comenzar-torneo/${tipoTorneo}`);

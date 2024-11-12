@@ -9,7 +9,7 @@ export const Torneo = () => {
   const { tipoTorneo } = useParams();
   const torneo = torneos.find((torneo) => torneo.id == tipoTorneo);
   const todosLosEquipos = useStoreUsuario((state) => state.usuario.equipos);
-  const equiposEnJuego = JSON.parse(localStorage.getItem("equiposEnJuego"));
+  const equiposEnJuego = JSON.parse(localStorage.getItem(tipoTorneo));
   const [comenzar, setComenzar] = useState(false);
   const [equipos, setEquipos] = useState(
     equiposEnJuego.map((item) => {
@@ -56,7 +56,7 @@ export const Torneo = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {equipos &&
               equipos
-                ?.sort(() => Math.random() - 0.5)
+                // ?.sort(() => Math.random() - 0.5)
                 .map((equipo, index) => (
                   <div
                     key={index}

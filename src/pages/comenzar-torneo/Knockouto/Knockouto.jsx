@@ -34,7 +34,7 @@ export const Knockouto = ({ equipos: Equipos }) => {
     handleJugar(numeroPartido + 2, equipos);
   };
   const reiniciarTorneo = () => {
-    setEquipos(handleEquiposImpar(Equipos));
+    setEquipos(handleEquiposImpar(Equipos.sort(() => Math.random() - 0.5)));
     setEnjuego(null);
     setGanadores({});
     setMinutosDeJuego(3);

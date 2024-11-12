@@ -1,11 +1,12 @@
 import { Knockouto } from "./Knockouto/Knockouto";
+import { TodosVsTodos } from "./todos-contra-todos/TodosVsTodos";
 
 export default function ComenzarTorneo({ torneo, equipos }) {
   if (torneo.id == "de2d0c6a-a9ca-4208-8eb4-993e1cb10f45") {
     return <Knockouto torneo={torneo} equipos={equipos} />;
   }
   if (torneo.id == "5ed10018-54bd-47fb-bd94-371ff72ef76b") {
-    return <Knockouto torneo={torneo} equipos={equipos} />;
+    return <TodosVsTodos torneo={torneo} equipos={equipos} />;
   }
   if (torneo.id == "0a59861f-b1de-4306-ab6a-ad6287bc0b2e") {
     return <Knockouto torneo={torneo} equipos={equipos} />;
