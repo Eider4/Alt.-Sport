@@ -15,6 +15,7 @@ export default function MostrarEquipos() {
   const [seleccionar, setSeleccionar] = useState(false);
   const [seleccionarTodo, setSeleccionarTodo] = useState(false);
   const [EquiposSeleccionados, setEquiposSeleccionados] = useState([]);
+  const [Error, setError] = useState("");
   const navigate = useNavigate();
   const { tipoTorneo } = useParams();
 
@@ -77,8 +78,8 @@ export default function MostrarEquipos() {
   }, [seleccionarTodo, equipos]);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <nav className="bg-green-50 shadow-md rounded-lg p-4 mb-6">
+    <div className=" bg-gray-100 min-h-screen">
+      <nav className="bg-green-50 shadow-md  p-4  fixed w-full">
         <h1 className="text-3xl font-bold text-center mb-4 text-green-600">
           Lista de Equipos
         </h1>
@@ -125,10 +126,21 @@ export default function MostrarEquipos() {
               Seleccionar todos
             </label>
           </div>
-
+          <p>Equipos seleccionados: {EquiposSeleccionados.length}</p>
           {/* Botón Comenzar Torneo */}
           <button
             onClick={() => {
+              if (
+                EquiposSeleccionados.length > 6 &&
+                tipoTorneo == "5ed10018-54bd-47fb-bd94-371ff72ef76b"
+              )
+                return setError("Debes ingresar solo 6 equipos");
+              if (
+                EquiposSeleccionados.length < 6 &&
+                tipoTorneo == "5ed10018-54bd-47fb-bd94-371ff72ef76b"
+              )
+                return setError("Debes ingresar 6 equipos");
+
               localStorage.setItem(
                 tipoTorneo,
                 JSON.stringify(EquiposSeleccionados)
@@ -139,6 +151,7 @@ export default function MostrarEquipos() {
           >
             <FaPlay className="mr-2" /> Comenzar torneo
           </button>
+          <p>{Error}</p>
         </div>
       </nav>{" "}
       <div className="p-6 bg-gray-100 min-h-screen">

@@ -6,15 +6,14 @@ import Ronda3 from "./Ronda3";
 export const TodosVsTodos = ({ equipos: Equipos }) => {
   const [grupo1, setGrupo1] = useState(null);
   const [grupo2, setGrupo2] = useState(null);
-  const [minutosDeJuego, setMinutosDeJuego] = useState(0.05);
+  const [minutosDeJuego, setMinutosDeJuego] = useState(5);
   const [FinalizadoRonda1, setFinalizadoRonda1] = useState(false);
   const [FinalizadoRonda1Ga, setFinalizadoRonda1Gb] = useState(false);
   const [resultadosRonda1, setResultadosRonda1] = useState(false);
   const [GanadoresRonda2, setGanadoresRonda2] = useState(null);
 
   const f_inicializarGrupos = () => {
-    const [a, b, c, d, e, f] = Equipos;
-    // .sort(() => Math.random() - 0.5);
+    const [a, b, c, d, e, f] = Equipos.sort(() => Math.random() - 0.5);
     setGrupo1([a, b, c]);
     setGrupo2([d, e, f]);
   };
@@ -26,7 +25,6 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
   const f_reiniciarTorneo = () => {
     f_inicializarGrupos();
   };
-
   return (
     <div>
       <button
@@ -102,17 +100,17 @@ export const TodosVsTodos = ({ equipos: Equipos }) => {
           />
         </div>
       )}
-      {/* {FinalizadoRonda1Ga &&
+      {FinalizadoRonda1Ga &&
         FinalizadoRonda1 &&
         resultadosRonda1 &&
         Object.values(resultadosRonda1).length && (
-        )} */}
-      <Ronda2
-        resultadosRonda1={resultadosRonda1}
-        setResultadosRonda1={setResultadosRonda1}
-        minutosDeJuego={minutosDeJuego}
-        setGanadoresRonda2={setGanadoresRonda2}
-      />
+          <Ronda2
+            resultadosRonda1={resultadosRonda1}
+            setResultadosRonda1={setResultadosRonda1}
+            minutosDeJuego={minutosDeJuego}
+            setGanadoresRonda2={setGanadoresRonda2}
+          />
+        )}
       {GanadoresRonda2 && <Ronda3 equipos={GanadoresRonda2} />}
     </div>
   );

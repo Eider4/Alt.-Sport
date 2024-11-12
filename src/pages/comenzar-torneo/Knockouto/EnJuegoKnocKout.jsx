@@ -40,7 +40,7 @@ export default function EnJuegoKnocKout({
     if (equipo1 && equipo2 && isRunning && TiempoJugando > 0) {
       timer = setTimeout(() => {
         setTiempoJugando((prev) => prev - 1);
-      }, 1);
+      }, 1000);
     } else if (TiempoJugando <= 0) {
       setIsRunning(false);
       const ganador =
